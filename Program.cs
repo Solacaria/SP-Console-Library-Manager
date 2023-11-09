@@ -25,11 +25,13 @@ Se till att programmet följer god praxis för objektorienterad programmering in
 Testa programmet genom att låna ut och återlämna böcker samt visa korrekt information om tillgängliga böcker och låntagare.*/
 using Bilbiotek;
 
-LibraryManager manager = new LibraryManager();
+Book manager = new Book();
 Library library = new Library();
+Book.Person person = new Book.Person();
 
 
-UI userUI = new UI(library, manager);
+
+UI userUI = new UI(library, manager, person);
 
 userUI.MainMenu();
 
