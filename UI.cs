@@ -7,22 +7,26 @@ using System.Threading.Tasks;
 
 namespace Bilbiotek
 {
+    /// <summary>
+    /// Basic user interface design with a switchcase and 2 standardised response methods.
+    /// </summary>
     public class UI
     {
-        
         private Book _book;
         private Library _library;
-        private Book.Person _person;
-        public UI(Library library, Book book, Book.Person person)
+        private Book.Borrower _person;
+        private SavedListsAndData _savedListsAndData;
+        public UI(Library library, Book book, Book.Borrower person, SavedListsAndData list)
         {
             _book = book;
             _library = library;
             _person = person;
+            _savedListsAndData = list;
         }
 
         public void MainMenu()
-        {       
-           
+        {     
+            //Menu will loop until a choise is made
             while (true)
             {
                 #region Main menu
@@ -35,44 +39,40 @@ namespace Bilbiotek
                 Console.WriteLine("4)\t Show available books");
                 Console.WriteLine("5)\t Show borrowed books and borrower");
                 Console.WriteLine("6)\t Exit program.");
-                Console.WriteLine("\n8)\t Add 5 books (Admin feature)");
+                Console.WriteLine("\n8)\t Add 5 books (Test feature)");
                 Console.Write("\nWhich option will it be (1-6) ?: ");
                 #endregion
-                if (int.TryParse(Console.ReadLine(), out int menuOption))
+                if (int.TryParse(Console.ReadLine(), out int menuOption))//Prohibits a crash if a char is entered.
                 {
                     switch (menuOption)
                     {
                         case 1:                
-                            _library.AddBook(_book);                        
+                            _library.AddBook(_savedListsAndData); //lets user add a book                   
                             break;
-
                         case 2:                        
-                            _library.LendBook(_person);
+                            _library.LendBook(_person, _savedListsAndData); //lets user lend out a book
                             break;
                         case 3:                       
-                            _library.ReturnBook();
+                            _library.ReturnBook(_savedListsAndData); //Lets user return a borrowed book
                             break;
-
                         case 4:
                             Console.Clear();
-                            _library.ShowAvailableBooks();
+                            _library.ShowAvailableBooks(_savedListsAndData); //Displays current available books
                             ReturnToMainMenu();
                             break;
-
                         case 5:
-                            _library.ShowBorrowedBooks(SavedListsAndData.borrowedBooks);
+                            _library.ShowBorrowedBooks(_savedListsAndData.BorrowedBooks); //displays current borrowed books
                             break;
-
                         case 6:
                             Console.Clear();
                             Console.WriteLine();
+                            SavedListsAndData.SaveAllData(_savedListsAndData); //Saves all current data
                             Console.WriteLine("Thanks for coming. Take care.");
-                            Environment.Exit(0);
+                            Environment.Exit(0); 
                             break;
                         case 8:
-                            _library.DefaultBooks(); 
+                            _library.DefaultBooks(_savedListsAndData); //Adds 5 books to AvailableBooks
                             break;
-
                         default:
                             InvalidUserInput();
                             break;
@@ -80,7 +80,6 @@ namespace Bilbiotek
                 }
                 else InvalidUserInput();
             }
-            
         }
         /// <summary>
         /// Standard error respons.
